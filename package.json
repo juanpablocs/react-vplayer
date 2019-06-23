@@ -1,0 +1,28 @@
+{
+  "name": "react-vplayer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel demo/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juanpablocs/react-vplayer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juanpablocs/react-vplayer/issues"
+  },
+  "homepage": "https://github.com/juanpablocs/react-vplayer#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3",
+    "typescript": "^3.5.2"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

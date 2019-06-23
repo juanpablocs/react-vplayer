@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "jsx": "react",
+      "outDir": "dist",
+      "rootDir": "src",
+      "declaration": true,
+      "typeRoots": ["node_modules/@types"],
+      "lib": ["dom", "es2015", "es2015.promise"]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules/**"]
+  }
+  
