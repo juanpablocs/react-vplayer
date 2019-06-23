@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/juanpablocs/react-vplayer#readme",
   "devDependencies": {
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
     "parcel-bundler": "^1.12.3",
     "typescript": "^3.5.2"
   },
