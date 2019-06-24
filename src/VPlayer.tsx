@@ -1,18 +1,17 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { SourceProps } from './VPlayerInterface';
-import { VideoManager } from './services/VideoManager';
+import store from './store';
+
+import { Provider } from 'react-redux';
+import { PlayerVideo } from './components/PlayerVideo';
 
 interface Props {
     source: string|SourceProps[]
     width: string
     height: string
 };
-
 export default class VPlayer extends React.Component<Props> {
-
-    protected _refVideo:any = React.createRef();
-    protected videoManager:VideoManager;
 
     static propTypes = {
         source: PropTypes.oneOfType([
@@ -27,7 +26,7 @@ export default class VPlayer extends React.Component<Props> {
 
     static defaultProps = {
         width: '720px',
-        height: '385px'
+        height: '405px'
     };
 
     private createMediaSource():string {
@@ -42,30 +41,15 @@ export default class VPlayer extends React.Component<Props> {
         return this.props.source;
     }
 
-    componentDidMount() {
-        this.videoManager = new VideoManager(this._refVideo.current);
-    }
-
-    clickPlay = () => {
-        this.videoManager.play();
-    }
-
-    clickPause = () => {
-        this.videoManager.pause();
-    }
-
     render() {
+
         return (
-            <div>
-                <video 
-                    ref={this._refVideo} 
-                    src={this.createMediaSource()}
-                    width={this.props.width}
-                    height={this.props.height}
+            <Provider store={store}>
+                <PlayerVideo 
+                    playUrl={this.createMediaSource()} 
+                    {...this.props}
                 />
-                <button onClick={this.clickPlay}>Play</button>
-                <button onClick={this.clickPause}>Pause</button>
-            </div>
+            </Provider>
         );
     }
 }
