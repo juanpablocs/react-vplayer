@@ -1,6 +1,6 @@
 # react-vplayer
 
-Work in progress...
+demo video player https://codesandbox.io/s/react-video-player-7kxwx
 
 ## Install 
 
