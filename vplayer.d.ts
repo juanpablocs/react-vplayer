@@ -8,6 +8,6 @@ declare module '*.svg';
 interface ReactVPlayerProps {
     source: string|SourceProps[]
 }
-export default class ReactPlayer extends React.Component<ReactVPlayerProps> {
+export default class VPlayer extends React.Component<ReactVPlayerProps> {
 
 }
