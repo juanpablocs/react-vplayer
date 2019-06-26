@@ -1,17 +1,11 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { SourceProps } from './VPlayerInterface';
 import store from './store';
-
+import { VPlayerProps } from './../vplayer';
 import { Provider } from 'react-redux';
 import { PlayerVideo } from './components/PlayerVideo';
 
-interface Props {
-    source: string|SourceProps[]
-    width: string
-    height: string
-};
-export default class VPlayer extends React.Component<Props> {
+export default class VPlayer extends React.Component<VPlayerProps> {
 
     static propTypes = {
         source: PropTypes.oneOfType([
