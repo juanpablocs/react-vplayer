@@ -11,14 +11,16 @@ import { ProgressBar } from '../ProgressBar';
 import { Timer } from '../Timer';
 import { Volume } from '../Volume';
 import { Fullscreen } from '../Fullscreen';
+import { ButtonSubtitle } from '../Subtitle/ButtonSubtitle';
+import { VPlayerProps } from '../../../vplayer';
+import { ShowSubtitle } from '../Subtitle/ShowSubtitle';
 
-interface Props {
+interface Props extends VPlayerProps {
     setPlaying: Function
     setCurrentTime: Function
     setDurationTime: Function
     playUrl: string
-    width: string
-    height: string
+    showCaption: boolean
 }
 
 interface State {
@@ -62,6 +64,9 @@ class PlayerVideo extends React.Component<Props, State>{
                         width={this.props.width}
                         height={this.props.height}
                     />
+
+                    {(this.props.srt && this.props.showCaption) && <ShowSubtitle srt={this.props.srt} /> }
+
                     <div className='controls'>
                         <ProgressBar />
                         <div className='area-control'>
@@ -71,6 +76,7 @@ class PlayerVideo extends React.Component<Props, State>{
                                 <Timer />
                             </div>
                             <div className="secondary-control">
+                                {this.props.srt && <ButtonSubtitle existSrt={true} />}
                                 <Fullscreen />
                             </div>
                         </div>
@@ -82,6 +88,7 @@ class PlayerVideo extends React.Component<Props, State>{
 }
 
 const mapStateToProps = (state) => ({
+    showCaption: state.player.showCaption
 });
 
 const mapDispatchToProps = (dispatch) => ({

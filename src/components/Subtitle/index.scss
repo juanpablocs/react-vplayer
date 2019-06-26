@@ -1,0 +1,33 @@
+.subtitle-float {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.subtitle-text {
+    font-size: 15px;
+    color:white;
+    padding:1px 5px;
+    background: rgba(0,0,0,0.5);
+}
+.button-caption {
+    margin-right:5px;
+    svg{
+        position: relative;
+        top: .2px;
+        fill: white;
+        width: 22px;
+        height: auto;
+    }
+    cursor: pointer;
+    opacity: .5;
+    button{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &.enabled{
+        opacity: 1;
+    }
+}

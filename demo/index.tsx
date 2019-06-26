@@ -24,7 +24,8 @@ const props = {
             type: 'video/mp4', 
             quality: 360
         },
-    ]
+    ],
+    srt: 'https://www.jplayer.net/asset/userdata/223028/caption/mzvk-pmk1oq/28752.srt'
 };
 
 ReactDOM.render(<VPlayer {...props} />, document.getElementById('root'));

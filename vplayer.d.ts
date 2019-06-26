@@ -11,8 +11,9 @@ export interface SourceProps {
 
 export interface VPlayerProps {
     source: string|SourceProps[]
-    width: string
-    height: string
+    srt?: string
+    width?: string
+    height?: string
 }
 
 export default class VPlayer extends React.Component<VPlayerProps> {

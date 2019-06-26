@@ -1,6 +1,6 @@
 {
   "name": "react-vplayer",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "dist/VPlayer.js",
   "scripts": {
@@ -27,8 +27,6 @@
     "file-loader": "^4.0.0",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.12.0",
-    "parcel-bundler": "^1.12.3",
-    "sass": "^1.21.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.0.4",
@@ -38,11 +36,11 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "@svgr/parcel-plugin-svgr": "^4.3.0",
     "@svgr/webpack": "^4.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "6.0.1",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "subtitle": "^2.0.3"
   }
 }
