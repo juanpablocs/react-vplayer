@@ -75,4 +75,14 @@ export class VideoManager implements ManagerInterface {
         }
         return 0;
     }
+
+    requestFullscreen(): void {
+        if(this.video) {
+            this.video.parentElement.requestFullscreen();
+        }
+    }
+
+    exitFullscreen(): void {
+        document.exitFullscreen();
+    }
 }

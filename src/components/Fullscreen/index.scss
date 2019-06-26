@@ -1,0 +1,13 @@
+.fullscreen-control{
+    margin: 0 10px 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg{
+        fill:white;
+        width: auto;
+        height: 16px;
+        position: relative;
+        bottom: -2px;
+    }
+}

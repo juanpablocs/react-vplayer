@@ -10,6 +10,7 @@ import { PlayPause } from '../PlayPause';
 import { ProgressBar } from '../ProgressBar';
 import { Timer } from '../Timer';
 import { Volume } from '../Volume';
+import { Fullscreen } from '../Fullscreen';
 
 interface Props {
     setPlaying: Function
@@ -70,7 +71,7 @@ class PlayerVideo extends React.Component<Props, State>{
                                 <Timer />
                             </div>
                             <div className="secondary-control">
-
+                                <Fullscreen />
                             </div>
                         </div>
                     </div>
