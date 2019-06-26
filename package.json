@@ -1,12 +1,13 @@
 {
   "name": "react-vplayer",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "dist/VPlayer.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --host 0.0.0.0 --history-api-fallback --content-base ./demo",
     "build": "rm -rf dist/* && webpack --mode development --config webpack.build.js"
   },
+  "typings": "vplayer.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/juanpablocs/react-vplayer.git"
