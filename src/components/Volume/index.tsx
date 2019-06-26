@@ -2,9 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 //@ts-ignore
-import IconVolumeUp from './../../assets/volume-up.svg';
+import {ReactComponent as IconVolumeUp} from './../../assets/volume-up.svg';
 //@ts-ignore
-import IconVolumeDown from './../../assets/volume-down.svg';
+import {ReactComponent as IconVolumeDown} from './../../assets/volume-down.svg';
 
 import './index.scss';
 import { toogleVolume } from '../../actions/vplayer';

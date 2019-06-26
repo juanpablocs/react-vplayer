@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import './index.scss';
 
 //@ts-ignore
-import IconPlay from './../../assets/play.svg';
+import {ReactComponent as IconPlay} from './../../assets/play.svg';
 //@ts-ignore
-import IconPause from './../../assets/pause.svg';
+import {ReactComponent as IconPause} from './../../assets/pause.svg';
 
 import { PlayerType, VPlayerContext } from '../../VPlayerContext';
 import { togglePlaying } from '../../actions/vplayer';

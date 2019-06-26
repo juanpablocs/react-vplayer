@@ -11,9 +11,9 @@ export const getScript = (url)=> {
 
 export const secondsToTime = (s) => {
     const pad = value => `0${value}`.slice(-2);
-    const getHours = value => Math.trunc((value / 60 / 60) % 60, 10);
-    const getMinutes = value => Math.trunc((value / 60) % 60, 10);
-    const getSeconds = value => Math.trunc(value % 60, 10);
+    const getHours = value => Math.trunc((value / 60 / 60) % 60);
+    const getMinutes = value => Math.trunc((value / 60) % 60);
+    const getSeconds = value => Math.trunc(value % 60);
     const timeHour = s > 86400 ? pad(getHours(s)) + ':' : '';
     return timeHour + pad(getMinutes(s)) + ':' + pad(getSeconds(s));
 }

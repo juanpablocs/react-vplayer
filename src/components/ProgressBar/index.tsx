@@ -66,31 +66,31 @@ class ProgressBar extends React.Component<Props, State> {
     }
 
     bufferProgress = () => {
-        const { video, durationTime: duration } = this.props;
-        let buffered = 0;
-        for (var i = 0; i < video.buffered.length; i++) {
-            if (video.buffered.start(video.buffered.length - 1 - i) < video.currentTime) {
-                buffered = video.buffered.end(video.buffered.length - 1 - i);
-                this.buffered = buffered;
-                // Stop checking for buffering if the video is fully buffered
-                if ((video.buffered.end(video.buffered.length - 1 - i) / duration) == 1) {
-                    clearInterval(this.bufferInterval);
-                }
+        // const { video, durationTime: duration } = this.props;
+        // let buffered = 0;
+        // for (var i = 0; i < video.buffered.length; i++) {
+        //     if (video.buffered.start(video.buffered.length - 1 - i) < video.currentTime) {
+        //         buffered = video.buffered.end(video.buffered.length - 1 - i);
+        //         this.buffered = buffered;
+        //         // Stop checking for buffering if the video is fully buffered
+        //         if ((video.buffered.end(video.buffered.length - 1 - i) / duration) == 1) {
+        //             clearInterval(this.bufferInterval);
+        //         }
 
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
 
-        if(buffered > 0) {
-            this.setState({buffered});
-        }
-        this.counterBuffering++;
+        // if(buffered > 0) {
+        //     this.setState({buffered});
+        // }
+        // this.counterBuffering++;
 
-        if(this.props.playing === false && this.counterBuffering>=20) {
-            clearInterval(this.bufferInterval);
-            this.counterBuffering = 0;
-        }
-        console.log('buffer',buffered);
+        // if(this.props.playing === false && this.counterBuffering>=20) {
+        //     clearInterval(this.bufferInterval);
+        //     this.counterBuffering = 0;
+        // }
+        // console.log('buffer',buffered);
     }
 
     clickProgress = (e:React.MouseEvent<HTMLDivElement>) => {
