@@ -64,6 +64,8 @@ class PlayerVideo extends React.Component<Props, State>{
                         width={this.props.width}
                         height={this.props.height}
                     />
+                    
+                    <PlayPause full />
 
                     {(this.props.srt && this.props.showCaption) && <ShowSubtitle srt={this.props.srt} /> }
 

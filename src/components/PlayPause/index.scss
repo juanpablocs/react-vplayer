@@ -16,3 +16,51 @@
         }
     }
 }
+
+.full-play-pause{
+    position: absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .button-status{
+      width: 60px;
+      height:60px;
+      background: rgba(0,0,0,.5);
+      border-radius: 100%;
+      -moz-animation: ytbutton .5s linear 1 normal forwards;
+      -webkit-animation: ytbutton .5s linear 1 normal forwards;
+      animation: ytbutton .5s linear 1 normal forwards;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.hide{
+        display: none;
+      }
+      .play {
+        svg{
+          left: 2px;
+        }
+      }
+      svg {
+        fill:white;
+        width: 22px;
+        position: relative;
+        top: 1px;
+      }
+    }
+  }
+
+  @keyframes  ytbutton{
+    0% {
+      opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
+  }

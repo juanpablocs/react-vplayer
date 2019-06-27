@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import './index.scss';
 
 //@ts-ignore
-import {ReactComponent as IconPlay} from './../../assets/play.svg';
+import { ReactComponent as IconPlay } from './../../assets/play.svg';
 //@ts-ignore
-import {ReactComponent as IconPause} from './../../assets/pause.svg';
+import { ReactComponent as IconPause } from './../../assets/pause.svg';
 
 import { PlayerType, VPlayerContext } from '../../VPlayerContext';
 import { togglePlaying } from '../../actions/vplayer';
@@ -18,13 +18,20 @@ interface Props {
     castPlaying: boolean
     castActive: boolean
     isActiveAds: boolean
+    full?: boolean
 }
-
-class PlayPause extends React.Component<Props>{
+interface State {
+    buttonFullHide: boolean;
+}
+class PlayPause extends React.Component<Props, State>{
 
     static contextType = VPlayerContext;
-    
-    videoMainManager:VideoManager;
+
+    state = {
+        buttonFullHide: true
+    }
+
+    videoMainManager: VideoManager;
 
     onPlay = () => {
         const { videoManager } = this.context as PlayerType;
@@ -36,17 +43,43 @@ class PlayPause extends React.Component<Props>{
         videoManager.pause();
     }
 
+    onAnimationEnd = () => {
+        this.setState({ buttonFullHide: true });
+    }
+
+    onClickManager = () => {
+        if (this.props.playing) {
+            this.onPause();
+        } else {
+            this.onPlay();
+        }
+        setTimeout(() => {
+            this.setState({ buttonFullHide: false });
+        }, 100);
+    }
+
     render() {
+        const ButtonPlayPause = () => this.props.playing ? (
+                <div className="pause"><IconPause /></div>
+            ) : (
+                <div className="play"><IconPlay /></div>
+        );
+
         return (
-            <div>
-                <button className="button--radius button--play" onClick={this.props.playing ? this.onPause : this.onPlay}>
-                    {this.props.playing ? (
-                        <div className="pause"><IconPause /></div>
-                        ) : (
-                        <div className="play"><IconPlay /></div>
-                        )
-                    }
-                </button>
+            <div className={this.props.full ? 'full-play-pause' : ''} onClick={this.onClickManager}>
+                {this.props.full ? (
+                    <div
+                        className={`button-status ${this.state.buttonFullHide ? 'hide' : ''}`}
+                        onAnimationEnd={this.onAnimationEnd}
+                    >
+                        <ButtonPlayPause />
+                    </div>
+                ) : (
+                        <button className="button--radius button--play">
+                            <ButtonPlayPause />
+                        </button>
+                    )}
+
             </div>
         )
     }
