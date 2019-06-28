@@ -67,8 +67,6 @@ class PlayerVideo extends React.Component<Props, State>{
                     
                     <PlayPause full />
 
-                    {(this.props.srt && this.props.showCaption) && <ShowSubtitle srt={this.props.srt} /> }
-
                     <div className='controls'>
                         <ProgressBar />
                         <div className='area-control'>
@@ -83,6 +81,8 @@ class PlayerVideo extends React.Component<Props, State>{
                             </div>
                         </div>
                     </div>
+
+                    {(this.props.srt && this.props.showCaption) && <ShowSubtitle srt={this.props.srt} /> }
                 </div>
             </VPlayerContext.Provider>
         )

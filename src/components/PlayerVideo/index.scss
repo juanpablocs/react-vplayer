@@ -58,15 +58,15 @@
 }
 
 .controls {
-    transform: translateY(0);
-    transition: 0.5s transform;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: opacity .4s ease-in-out,transform .4s ease-in-out;
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 2;
     height: 50px;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -79,6 +79,10 @@
       height: 50px;
       background: linear-gradient(transparent, #000);
       z-index: -1;
+    }
+    &:hover{
+      transform: translateY(0px);
+      opacity: 1;
     }
     .area-control{
       display: flex;

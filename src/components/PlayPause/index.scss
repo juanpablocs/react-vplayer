@@ -27,6 +27,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    &:hover {
+      &+ .controls{
+        transform: translateY(0px);
+        opacity: 1;
+      }
+    }
+    &.show-control{
+      &+ .controls {
+        transform: translateY(0px)!important;
+        opacity: 1;
+      }
+    }
     .button-status{
       width: 60px;
       height:60px;

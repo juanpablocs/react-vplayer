@@ -59,14 +59,15 @@ class PlayPause extends React.Component<Props, State>{
     }
 
     render() {
-        const ButtonPlayPause = () => this.props.playing ? (
+        const { playing } = this.props
+        const ButtonPlayPause = () => playing ? (
                 <div className="pause"><IconPause /></div>
             ) : (
                 <div className="play"><IconPlay /></div>
         );
 
         return (
-            <div className={this.props.full ? 'full-play-pause' : ''} onClick={this.onClickManager}>
+            <div className={this.props.full ? `full-play-pause ${playing ? '' : 'show-control'}` : ''} onClick={this.onClickManager}>
                 {this.props.full ? (
                     <div
                         className={`button-status ${this.state.buttonFullHide ? 'hide' : ''}`}
