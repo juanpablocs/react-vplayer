@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { stop } from '../../actions/vplayer';
+import { stop, currentTime } from '../../actions/vplayer';
 import { secondsToTime } from '../../utils';
 import { PlayerType, VPlayerContext } from '../../VPlayerContext';
+import Slider from './../Slider';
 
 import './index.scss';
 
@@ -16,6 +17,7 @@ interface Props {
     castActive: boolean
     isActiveAds: boolean
     videoSource: any
+    setCurrentTime: Function
 }
 
 interface State {
@@ -33,6 +35,10 @@ class ProgressBar extends React.Component<Props, State> {
     bufferInterval;
     buffered = 0;
     counterBuffering = 0;
+    
+    percentage:number = 0;
+
+    
 
     componentDidUpdate(prevProps) {
         if ((prevProps.playing !== this.props.playing) && (this.props.playing===true && this.props.videoBackground.stop===false)) {
@@ -93,12 +99,11 @@ class ProgressBar extends React.Component<Props, State> {
         // console.log('buffer',buffered);
     }
 
-    clickProgress = (e:React.MouseEvent<HTMLDivElement>) => {
-        const target = e.currentTarget;
-        const { width, left } = target.getBoundingClientRect();
-        const percentage = (100 / width) * (e.pageX - left);
+    clickProgress = (percentage) => {
+        console.log(percentage);
         const timer = this.props.durationTime * (percentage / 100);
-        console.log(timer);
+        this.props.setCurrentTime(timer);
+
         const { videoManager } = this.context as PlayerType;
 
         if (this.props.castActive) {
@@ -108,50 +113,26 @@ class ProgressBar extends React.Component<Props, State> {
         }
     }
 
-    moveProgress = (e:React.MouseEvent<HTMLDivElement>) => {
-        const target = e.currentTarget;
-        const { width, left } = target.getBoundingClientRect();
-        const percentage = (100 / width) * (e.pageX - left);
-        if(width){
-            const timer = this.props.durationTime * (percentage / 100);
-            const timerElement = target.previousElementSibling as HTMLDivElement;
-            timerElement.innerHTML = secondsToTime(timer);
-            timerElement.style.left = `${(e.pageX - left - 10)}px`;
-        }
-    }
-    enterHoverProgress = (e:React.MouseEvent<HTMLDivElement>) => {
-        const timerElement = e.currentTarget.previousElementSibling as HTMLDivElement;
-        timerElement.classList.add('hover-timer--active');
-    }
 
-    exitHoverProgress = (e:React.MouseEvent<HTMLDivElement>) => {
-        const timerElement = e.currentTarget.previousElementSibling as HTMLDivElement;
-        timerElement.classList.remove('hover-timer--active');
+    onProgress = (percentage:number) => {
+        this.percentage = percentage;
+        const { videoManager } = this.context as PlayerType;
+        videoManager.pause();
     }
 
     render() {
         const { durationTime, currentTime } = this.props;
-        const progress = `${(currentTime / durationTime) * 100}%`;
+        const progress = (currentTime / durationTime) * 100;
         const buffer = `${(this.state.buffered / durationTime) * 100}%`;
         return (
             <div className="control-progress">
-                <div className='hover-timer'>00:00</div>
-                <div 
-                    className="progress"
-                    onMouseUp={this.clickProgress}
-                    onMouseEnter={this.enterHoverProgress} 
-                    onMouseMove={this.moveProgress} 
-                    onMouseLeave={this.exitHoverProgress}
-                >
-                    <div
-                        className="progress__bar"
-                        style={{ width: progress }}
+                <div className="control-slider">
+                    <Slider
+                        timerDuration={this.props.durationTime}
+                        value={progress}
+                        onProgress={this.onProgress}
+                        onUp={this.clickProgress}
                     />
-                    <div 
-                        className="progress__buffer"
-                        style={{ width: buffer }}
-                    />
-                    <div className="progress__pointer" />
                 </div>
             </div>
         )
@@ -171,7 +152,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     setVideoBackground: (obj) => {
         dispatch(stop(obj));
-    }
+    },
+    setCurrentTime: (current) => {
+        dispatch(currentTime(current));
+    },
 });
 
 const ProgressBarHoc = connect(mapStateToProps, mapDispatchToProps)(ProgressBar);

@@ -9,6 +9,7 @@ import {ReactComponent as IconVolumeDown} from './../../assets/volume-down.svg';
 import './index.scss';
 import { toogleVolume } from '../../actions/vplayer';
 import { VPlayerContext, PlayerType } from '../../VPlayerContext';
+import Slider from './../Slider';
 
 interface Props {
     volumeOn: boolean
@@ -33,6 +34,14 @@ class Volume extends React.Component<Props> {
         }
     }
 
+    onProgress(p) {
+        console.log('progress', p);
+    }
+
+    clickProgress(p) {
+        console.log('click', p);
+    }
+
     render() {
         return (
             <div className='volume-control'>
@@ -44,9 +53,10 @@ class Volume extends React.Component<Props> {
                     )}
                 </button>
                 <div className='volume-area'>
-                    <div 
-                        className='volume-drag' 
-                        style={{width: this.props.volumeOn ? '30%' : '0%'}}
+                    <Slider
+                        value={this.props.volumeOn ? 30 : 0}
+                        onProgress={this.onProgress}
+                        onUp={this.clickProgress}
                     />
                 </div>
             </div>
