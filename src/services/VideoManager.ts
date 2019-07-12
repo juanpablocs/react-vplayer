@@ -8,18 +8,16 @@ export class VideoManager implements ManagerInterface {
     constructor(video:HTMLVideoElement) {
         if(video) {
             this.video = video;
-            this.video.addEventListener('playing', () => {
-                this.events['playing']();
-            });
-            this.video.addEventListener('pause', () => {
-                this.events['pause']();
-            });
-            this.video.addEventListener('timeupdate', () => {
-                this.events['timeupdate']();
-            });
-            this.video.addEventListener('loadedmetadata', () => {
-                this.events['metadata']();
-            })
+            this.video.addEventListener('playing', () => this.executeEvent('playing'));
+            this.video.addEventListener('pause', () => this.executeEvent('pause'));
+            this.video.addEventListener('timeupdate', () => this.executeEvent('timeupdate'));
+            this.video.addEventListener('loadedmetadata', () => this.executeEvent('metadata'));
+        }
+    }
+
+    executeEvent(k) {
+        if(typeof this.events[k] === 'function') {
+            this.events[k]();
         }
     }
 
@@ -71,7 +69,7 @@ export class VideoManager implements ManagerInterface {
 
     getCurrentTime():number {
         if(this.video) {
-            return this.video.currentTime
+            return this.video.currentTime;
         }
         return 0;
     }

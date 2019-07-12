@@ -25,7 +25,8 @@ const props = {
             quality: 360
         },
     ],
-    srt: 'https://www.jplayer.net/asset/userdata/223028/caption/mzvk-pmk1oq/28752.srt'
+    loadSrt: 'https://www.jplayer.net/asset/userdata/223028/caption/mzvk-pmk1oq/28752.srt',
+    loadAds: ''
 };
 
 ReactDOM.render(<VPlayer {...props} />, document.getElementById('root'));

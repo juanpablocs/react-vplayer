@@ -14,6 +14,7 @@ import { Fullscreen } from '../Fullscreen';
 import { ButtonSubtitle } from '../Subtitle/ButtonSubtitle';
 import { VPlayerProps } from '../../../vplayer';
 import { ShowSubtitle } from '../Subtitle/ShowSubtitle';
+import { PlayerControl } from '../../services/PlayerControl';
 
 interface Props extends VPlayerProps {
     setPlaying: Function
@@ -33,15 +34,12 @@ class PlayerVideo extends React.Component<Props, State>{
     _refVideo: any = React.createRef();
 
     componentDidMount() {
-
-        const videoManager = new VideoManager(this._refVideo.current);
+        const videoManager = new PlayerControl(this._refVideo.current);
 
         videoManager.on('playing', () => this.props.setPlaying(true));
         videoManager.on('pause', () => this.props.setPlaying(false));
         videoManager.on('timeupdate', () => this.props.setCurrentTime(videoManager.getCurrentTime()));
-        videoManager.on('metadata', () => {
-            this.props.setDurationTime(videoManager.getDuration())
-        });
+        videoManager.on('metadata', () => this.props.setDurationTime(videoManager.getDuration()));
 
         this.setState({ videoManager });
 
@@ -76,13 +74,13 @@ class PlayerVideo extends React.Component<Props, State>{
                                 <Timer />
                             </div>
                             <div className="secondary-control">
-                                {this.props.srt && <ButtonSubtitle existSrt={true} />}
+                                {this.props.loadSrt && <ButtonSubtitle existSrt={true} />}
                                 <Fullscreen />
                             </div>
                         </div>
                     </div>
 
-                    {(this.props.srt && this.props.showCaption) && <ShowSubtitle srt={this.props.srt} /> }
+                    {(this.props.loadSrt && this.props.showCaption) && <ShowSubtitle srt={this.props.loadSrt} /> }
                 </div>
             </VPlayerContext.Provider>
         )

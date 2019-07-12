@@ -1,7 +1,7 @@
 export const getScript = (url)=> {
     return new Promise(function(resolve, reject)
     {
-        let newScript = document.createElement("script");
+        const newScript = document.createElement("script");
         newScript.onerror = reject;
         newScript.onload = resolve;
         newScript.src = url;
