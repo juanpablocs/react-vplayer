@@ -26,7 +26,7 @@ const props = {
         },
     ],
     loadSrt: 'https://www.jplayer.net/asset/userdata/223028/caption/mzvk-pmk1oq/28752.srt',
-    loadAds: ''
+    loadAds: 'https://v.9stream.tv/vast-30s-ad.xml'
 };
 
 ReactDOM.render(<VPlayer {...props} />, document.getElementById('root'));

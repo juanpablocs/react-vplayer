@@ -12,6 +12,7 @@ export class VideoManager implements ManagerInterface {
             this.video.addEventListener('pause', () => this.executeEvent('pause'));
             this.video.addEventListener('timeupdate', () => this.executeEvent('timeupdate'));
             this.video.addEventListener('loadedmetadata', () => this.executeEvent('metadata'));
+            this.video.addEventListener('loadstart', () => this.executeEvent('ready'));
         }
     }
 

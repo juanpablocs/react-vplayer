@@ -44,15 +44,30 @@
       z-index: 1;
       position: absolute;
     }
-    .ad-container{
+    .adContainer{
       width: 100%;
       height: 100%;
       z-index: 2;
       position: absolute;
+      background: black;
+      display: none;
     }
-    &.player--ads {
-      .progress__bar{
-        background: #fc0!important;
+
+    &[ads] {
+      .control-slider {
+        .slider {
+          pointer-events: none;
+        }
+        .slider__bar{
+          background: #fc0!important;
+        }
+      }
+      .adContainer{
+        display: block;
+      }
+      .controls {
+        transform: translateY(0px)!important;
+        opacity: 1;
       }
     }
 }

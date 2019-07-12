@@ -34,14 +34,25 @@ class PlayerVideo extends React.Component<Props, State>{
     _refVideo: any = React.createRef();
 
     componentDidMount() {
-        const videoManager = new PlayerControl(this._refVideo.current);
+        const playerControl = new PlayerControl(
+            this._refVideo.current,
+            this.props.loadAds
+        );
 
-        videoManager.on('playing', () => this.props.setPlaying(true));
-        videoManager.on('pause', () => this.props.setPlaying(false));
-        videoManager.on('timeupdate', () => this.props.setCurrentTime(videoManager.getCurrentTime()));
-        videoManager.on('metadata', () => this.props.setDurationTime(videoManager.getDuration()));
-
-        this.setState({ videoManager });
+        playerControl.on('playing', () => this.props.setPlaying(true));
+        playerControl.on('pause', () => this.props.setPlaying(false));
+        playerControl.on('timeupdate', () => this.props.setCurrentTime(playerControl.getCurrentTime()));
+        playerControl.on('metadata', () => {
+            this.props.setCurrentTime(0);
+            this.props.setDurationTime(playerControl.getDuration())
+        });
+        playerControl.on('ready', () => {
+            console.log('ready');
+            this.setState({ videoManager:playerControl });
+        });
+        playerControl.on('error', () => {
+            console.log('errror!!!!!');
+        });
 
     }
 
@@ -63,6 +74,7 @@ class PlayerVideo extends React.Component<Props, State>{
                         height={this.props.height}
                     />
                     
+                    <div className='adContainer' />
                     <PlayPause full />
 
                     <div className='controls'>

@@ -130,7 +130,7 @@ export default class Progress extends React.Component<Props> {
     render() {
         return (
             <React.Fragment>
-                {this.props.timerDuration && <div className='hover-timer' ref={this.refTimer}>00:00</div>}
+                {(this.props.timerDuration>0) && <div className='hover-timer' ref={this.refTimer}>00:00</div>}
                 <div
                     className="slider"
                     onMouseDown={this.onPressedSlider}
