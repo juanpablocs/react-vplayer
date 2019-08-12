@@ -30,6 +30,7 @@ export class AdsManager implements ManagerInterface {
     };
     adsManager: any;
     currentAd: any;
+    hideControl: boolean;
 
     constructor(video:HTMLVideoElement) {
         this.domElement = {
@@ -60,16 +61,26 @@ export class AdsManager implements ManagerInterface {
             this.domElement.videoContainer
         );
         const adsLoader = new window.google.ima.AdsLoader(adDisplayContainer);
+
+        adsLoader.getSettings().setVpaidMode(
+            window.google.ima.ImaSdkSettings.VpaidMode.ENABLED
+        );
+        adsLoader.getSettings().setLocale('es');
+        adsLoader.getSettings().setNumRedirects(10);
         // Listen and respond to ads loaded and error events.
         adsLoader.addEventListener(
             window.google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-            this.prepareAdsManager,
-            false);
-        adsLoader.addEventListener(
-            window.google.ima.AdErrorEvent.Type.AD_ERROR,
-            ()=>this.executeEvent('error'),
+            this.prepareAdsManager.bind(this),
             false);
 
+        adsLoader.addEventListener(
+            window.google.ima.AdErrorEvent.Type.AD_ERROR,
+            ()=>{
+                this.active = false;
+                this.executeEvent('error');
+            },
+            false);
+        
         const adsRequest = new window.google.ima.AdsRequest();
         adsRequest.adTagUrl = this.creativeUrl;
         adsRequest.setAdWillAutoPlay(true);
@@ -79,9 +90,9 @@ export class AdsManager implements ManagerInterface {
         adDisplayContainer.initialize();
     }
 
-    executeEvent(k) {
+    executeEvent(k, arg=null) {
         if(typeof this.events[k] === 'function') {
-            this.events[k]();
+            this.events[k](arg);
         }
     }
 
@@ -90,16 +101,16 @@ export class AdsManager implements ManagerInterface {
     }
 
     private prepareAdsManager = (e) => {
-
+        console.log('prepareads');
         const googleIma = window.google.ima;
-        const { ALL_ADS_COMPLETED, COMPLETE, STARTED, PAUSED, RESUMED } = googleIma.AdEvent.Type;
+        const { ALL_ADS_COMPLETED, COMPLETE, LOADED, STARTED, PAUSED, RESUMED, LOG } = googleIma.AdEvent.Type;
         const { AD_ERROR } = googleIma.AdErrorEvent.Type;
 
-        const { eventStart, eventError, eventEnd, eventEndAll, eventPlaying, eventPause} = this.manageEvents();
+        const { eventStart, eventError, eventEnd, eventEndAll, eventPlaying, eventPause, eventLoad } = this.manageEvents();
 
         const adsRenderingSettings = new googleIma.AdsRenderingSettings();
         adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
-        adsRenderingSettings.bitrate = 1000
+        adsRenderingSettings.bitrate = 1000;
 
         // videoContent should be set to the content video element.
         this.adsManager = e.getAdsManager(this.domElement.videoContainer, adsRenderingSettings);
@@ -110,10 +121,16 @@ export class AdsManager implements ManagerInterface {
         this.adsManager.addEventListener(PAUSED, eventPause);
         this.adsManager.addEventListener(ALL_ADS_COMPLETED, eventEndAll);
         this.adsManager.addEventListener(COMPLETE, eventEnd);
+        this.adsManager.addEventListener(LOG, (l)=>console.log('log', l));
+        this.adsManager.addEventListener(LOADED, eventLoad);
 
         try {
             // Initialize the ads manager. Ad rules playlist will start at this time.
-            this.adsManager.init(this.domElement.videoContainer.offsetWidth, this.domElement.videoContainer.offsetHeight - 50, window.google.ima.ViewMode.NORMAL);
+            this.adsManager.init(
+                this.domElement.videoContainer.offsetWidth, 
+                this.domElement.videoContainer.offsetHeight - 50, 
+                window.google.ima.ViewMode.NORMAL
+            );
             // Call play to start showing the ad. Single video and overlay ads will
             // start at this time; the call will be ignored for ad rules.
             this.adsManager.start();
@@ -121,13 +138,13 @@ export class AdsManager implements ManagerInterface {
             // An error may be thrown if there was a problem with the VAST response.
             console.log('adError', adError);
         }
-        
         this.executeEvent('ready');
     }
 
     manageEvents() {
         return {
             eventError: () => {
+                this.active = false;
                 this.executeEvent('error');
             },
             eventPlaying: () => {
@@ -142,22 +159,51 @@ export class AdsManager implements ManagerInterface {
                 this.adTrackingTimer = null;
             },
             eventStart: (e) => {
-                console.log('start');
-                this.executeEvent('playing');
+                console.log('start', e);
+                if(!this.hideControl) {
+                    this.active = true;
+                    
+                    if(this.currentAd.isLinear()) {
+                        this.domElement.videoContainer.pause();
+                        this.executeEvent('playing');
+                        this.executeEvent('metadata');
+                        this.adTrackingTimer = setInterval(()=>this.executeEvent('timeupdate'), 500);
+                    }
+                }
+            },
+            eventLoad: (e) => {
                 this.domElement.adContainer.parentElement.setAttribute('ads', '1');
                 this.currentAd = e.getAd();
-                this.executeEvent('metadata');
-                // this.events['start'](this.currentAd.isLinear());
-
-                this.adTrackingTimer = setInterval(()=>this.executeEvent('timeupdate'), 500);
+                let clickThroughUrl: string;
+                for(let prop in this.currentAd) {
+                    clickThroughUrl = this.currentAd[prop].clickThroughUrl;
+                    if (clickThroughUrl !== undefined && clickThroughUrl !== null) {
+                        break;
+                    }
+                }
+                this.hideControl = clickThroughUrl.length === 0;
+                if (this.hideControl) {
+                    this.domElement.adContainer.parentElement.setAttribute('hidecontrol', '1');
+                    this.adsManager.resize(
+                        this.domElement.videoContainer.offsetWidth,
+                        this.domElement.videoContainer.offsetHeight,
+                        window.google.ima.ViewMode.NORMAL
+                    );
+                }
+                console.log(this.currentAd.isLinear());
+                console.log(this.getCurrentTime());
             },
             eventEnd: () => {
                 console.log('ended');
                 this.active = false;
                 this.domElement.adContainer.parentElement.removeAttribute('ads');
+                this.domElement.adContainer.parentElement.removeAttribute('hidecontrol');
                 clearInterval(this.adTrackingTimer);
                 this.adTrackingTimer = null;
-                this.executeEvent('endAds');
+                const ta = this.currentAd.getAdPodInfo().getTotalAds();
+                
+                this.executeEvent('endAds', ta===1);
+                this.domElement.videoContainer.play();
             },
             eventEndAll: () => {
                 console.log('endall');
@@ -168,6 +214,7 @@ export class AdsManager implements ManagerInterface {
                     this.executeEvent('endAds');
                     this.domElement.videoContainer.play();
                     this.domElement.adContainer.parentElement.removeAttribute('ads');
+                    this.domElement.adContainer.parentElement.removeAttribute('hidecontrol');
                 }, 500);
             }
         }

@@ -21,8 +21,11 @@ export class PlayerControl {
     on(type, callback) {
         if(this.adsManager) {
             this.adsManager.on(type, callback);
-            this.adsManager.on('endAds', () => {
+            this.adsManager.on('endAds', (play) => {
                 this.videoManager.executeEvent('metadata');
+                // if(play) {
+                //     this.videoManager.play();
+                // }
             });
             this.adsManager.on('error', () => {
                 this.videoManager.executeEvent('metadata');

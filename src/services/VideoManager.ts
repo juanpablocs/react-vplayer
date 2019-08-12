@@ -26,7 +26,7 @@ export class VideoManager implements ManagerInterface {
         this.events[type] = callback;
     }
 
-    play(): void {
+    public play(): void {
         if(this.video) {
             this.video.play();
         }

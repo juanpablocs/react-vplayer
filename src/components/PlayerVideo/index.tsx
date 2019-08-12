@@ -47,8 +47,7 @@ class PlayerVideo extends React.Component<Props, State>{
             this.props.setDurationTime(playerControl.getDuration())
         });
         playerControl.on('ready', () => {
-            console.log('ready');
-            this.setState({ videoManager:playerControl });
+            this.setState({ videoManager: playerControl });
         });
         playerControl.on('error', () => {
             console.log('errror!!!!!');
@@ -73,7 +72,7 @@ class PlayerVideo extends React.Component<Props, State>{
                         width={this.props.width}
                         height={this.props.height}
                     />
-                    
+
                     <div className='adContainer' />
                     <PlayPause full />
 
@@ -92,7 +91,7 @@ class PlayerVideo extends React.Component<Props, State>{
                         </div>
                     </div>
 
-                    {(this.props.loadSrt && this.props.showCaption) && <ShowSubtitle srt={this.props.loadSrt} /> }
+                    {(this.props.loadSrt && this.props.showCaption) && <ShowSubtitle srt={this.props.loadSrt} />}
                 </div>
             </VPlayerContext.Provider>
         )

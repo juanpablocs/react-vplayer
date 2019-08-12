@@ -66,8 +66,13 @@
         display: block;
       }
       .controls {
-        transform: translateY(0px)!important;
+        transform: translateY(0px);
         opacity: 1;
+      }
+    }
+    &[hidecontrol] {
+      .controls{
+        transform: translateY(50px)!important;
       }
     }
 }
