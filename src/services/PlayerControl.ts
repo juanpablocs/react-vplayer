@@ -23,13 +23,15 @@ export class PlayerControl {
             this.adsManager.on(type, callback);
             this.adsManager.on('endAds', (play) => {
                 this.videoManager.executeEvent('metadata');
-                // if(play) {
-                //     this.videoManager.play();
-                // }
             });
             this.adsManager.on('error', () => {
                 this.videoManager.executeEvent('metadata');
             });
+            this.adsManager.on('linear', (isLinear: boolean)=>{
+                if(!isLinear) {
+                    this.videoManager.executeEvent('metadata');
+                }
+            })
         }
         this.videoManager.on(type, callback);
     }
@@ -55,7 +57,11 @@ export class PlayerControl {
     }
 
     setVolume(vol) {
-        this.videoManager.setVolume(vol);
+        if(this.adsManager && this.adsManager.active) {
+            this.adsManager.setVolume(vol);
+        }else{
+            this.videoManager.setVolume(vol);
+        }
     }
 
     getDuration() {
@@ -76,9 +82,19 @@ export class PlayerControl {
 
     requestFullscreen(): void {
         this.videoManager.requestFullscreen();
+        if(this.adsManager) {
+            this.adsManager.requestFullscreen();
+        }
     }
 
     exitFullscreen(): void {
         this.videoManager.exitFullscreen();
+        if(this.adsManager) {
+            this.adsManager.exitFullscreen();
+        }
+    }
+
+    changeSource(url, currentTime): void {
+        this.videoManager.changeSource(url, currentTime);
     }
 }

@@ -26,9 +26,9 @@ const props = {
         },
     ],
     loadSrt: 'https://www.jplayer.net/asset/userdata/223028/caption/mzvk-pmk1oq/28752.srt',
-    // loadAds: 'https://v.9stream.tv/vast-30s-ad.xml'
+    loadAds: 'https://v.9stream.tv/vast-30s-ad.xml'
     // loadAds: 'https://www.movcpm.com/watch.xml?key=1ab5f853805ad39477e714e75ac6862b&custom=%7B%27width%27%3A%27720%27%2C%27height%27%3A%27405%27%7D&cb=[CACHE_BUSTERS]&vastref=pelisplus.co'
-    loadAds: 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpostpod&cmsid=496&vid=short_onecue&correlator='
+    // loadAds: 'https://pubads.g.doubleclick.net/gampad/ads?sz=480x70&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dnonlinear&correlator='
 };
 
 ReactDOM.render(<VPlayer {...props} />, document.getElementById('root'));

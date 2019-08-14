@@ -1,0 +1,84 @@
+.quality-control{
+    margin: 0 2px;
+    position: relative;
+    &.quality-control--open{
+        .quality-options{
+            opacity: 1;
+            visibility: visible;
+            transform: translate3d(0, -75px, 0);
+        }
+    }
+    .button-quality{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .quality-open{
+        width: 22px;
+        height:16px;
+        background: white;
+        border-radius: 2px;
+        color: black;
+        font-size: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: .5px;
+        cursor:pointer;
+    }
+    .quality-options{
+        position: absolute;
+        z-index: 4;
+        left: -37px;
+        font-size:13px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translate3d(0, -50px, 0);
+        will-change: transform, opacity, visibility;
+        transition: .25s ease all;
+        >div{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            box-shadow: 0 0 5px 0 #111;
+            background: #333;
+            color:white;
+            border-radius: 4px;
+        }
+        &:before{
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 9px 9px 0 9px;
+            border-width: 8px 11px 0 11px;
+            border-color: #333333 transparent transparent transparent;
+            z-index:-1;
+            bottom: -4px;
+            left: calc(50% - 10px);
+        }
+        .item-option{
+            padding: 6px 8px;
+            cursor:pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90px;
+            &:hover{
+                background: rgba(0,0,0,0.2);
+            }
+            &.active{
+                background: rgba(0,0,0,0.3);
+            }
+            span{
+                font-size: 9px;
+                padding: 1px 4px;
+                display: block;
+                background: rgba(0,0,0,0.2);
+                border-radius: 2px;
+            }
+        }
+    }
+}

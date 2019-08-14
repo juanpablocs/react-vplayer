@@ -28,8 +28,9 @@ export const toggleCastPlaying = (payload=null) => ({
     payload
 });
 
-export const toogleVolume = () => ({
-    type: 'TOOGLE_VOLUME',
+export const setVolume = (payload=0) => ({
+    type: 'SET_VOLUME',
+    payload
 });
 
 export const toogleFullscreen = () => ({
@@ -54,4 +55,8 @@ export const videoAds= (payload=false) => ({
 export const videoSource= (payload={}) => ({
     type: 'VIDEO_SOURCE',
     payload
+});
+
+export const videoWaiting = () => ({
+    type: 'VIDEO_WAITING'
 });

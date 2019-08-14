@@ -24,6 +24,8 @@ export class AdsManager implements ManagerInterface {
 
     protected adTrackingTimer: any;
 
+    private heightControl:number = 50;
+
     public domElement: AdElement = {
         videoContainer: null,
         adContainer: null
@@ -37,7 +39,6 @@ export class AdsManager implements ManagerInterface {
             videoContainer:video, 
             adContainer: video.parentElement.querySelector('.adContainer') as HTMLDivElement
         };
-        this.active = true;
     }
 
     setCreativeUrl(url) {
@@ -128,7 +129,7 @@ export class AdsManager implements ManagerInterface {
             // Initialize the ads manager. Ad rules playlist will start at this time.
             this.adsManager.init(
                 this.domElement.videoContainer.offsetWidth, 
-                this.domElement.videoContainer.offsetHeight - 50, 
+                this.domElement.videoContainer.offsetHeight - this.heightControl, 
                 window.google.ima.ViewMode.NORMAL
             );
             // Call play to start showing the ad. Single video and overlay ads will
@@ -160,19 +161,17 @@ export class AdsManager implements ManagerInterface {
             },
             eventStart: (e) => {
                 console.log('start', e);
-                if(!this.hideControl) {
-                    this.active = true;
-                    
+                if(!this.hideControl) {                  
                     if(this.currentAd.isLinear()) {
                         this.domElement.videoContainer.pause();
                         this.executeEvent('playing');
                         this.executeEvent('metadata');
                         this.adTrackingTimer = setInterval(()=>this.executeEvent('timeupdate'), 500);
                     }
+                    this.executeEvent('linear', this.currentAd.isLinear());
                 }
             },
             eventLoad: (e) => {
-                this.domElement.adContainer.parentElement.setAttribute('ads', '1');
                 this.currentAd = e.getAd();
                 let clickThroughUrl: string;
                 for(let prop in this.currentAd) {
@@ -190,8 +189,12 @@ export class AdsManager implements ManagerInterface {
                         window.google.ima.ViewMode.NORMAL
                     );
                 }
-                console.log(this.currentAd.isLinear());
-                console.log(this.getCurrentTime());
+                if(this.currentAd.isLinear()) {
+                    this.active = true;
+                    this.domElement.adContainer.parentElement.setAttribute('ads', 'linear');
+                }else {
+                    this.domElement.adContainer.parentElement.setAttribute('ads', 'nolinear');
+                }
             },
             eventEnd: () => {
                 console.log('ended');
@@ -217,6 +220,13 @@ export class AdsManager implements ManagerInterface {
                     this.domElement.adContainer.parentElement.removeAttribute('hidecontrol');
                 }, 500);
             }
+        }
+    }
+
+    setVolume(vol) {
+        //sanitize number / 100 result 0 - 1 (0.2, 0.5, 1);
+        if(this.adsManager) {
+            this.adsManager.setVolume(Number(vol.toFixed(1)));
         }
     }
 
@@ -254,5 +264,23 @@ export class AdsManager implements ManagerInterface {
             return duration - remainingTime;
         }
         return 0;
+    }
+
+    requestFullscreen(): void {
+        this.adsManager.resize(
+            document.body.offsetWidth, 
+            window.screen.height - this.heightControl,
+            window.google.ima.ViewMode.FULLSCREEN
+        );
+    }
+
+    exitFullscreen(): void {
+        setTimeout(()=>{
+            this.adsManager.resize(
+                this.domElement.videoContainer.offsetWidth, 
+                this.domElement.videoContainer.offsetHeight - this.heightControl,
+                window.google.ima.ViewMode.NORMAL
+            );
+        }, 100);
     }
 }

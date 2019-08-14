@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import './index.scss';
 
 import { PlayerType, VPlayerContext } from '../../VPlayerContext';
-import { togglePlaying, currentTime, durationTime } from '../../actions/vplayer';
-import { VideoManager } from '../../services/VideoManager';
+import { togglePlaying, currentTime, durationTime, videoSource, videoWaiting } from '../../actions/vplayer';
 import { PlayPause } from '../PlayPause';
 import { ProgressBar } from '../ProgressBar';
 import { Timer } from '../Timer';
@@ -15,13 +14,18 @@ import { ButtonSubtitle } from '../Subtitle/ButtonSubtitle';
 import { VPlayerProps } from '../../../vplayer';
 import { ShowSubtitle } from '../Subtitle/ShowSubtitle';
 import { PlayerControl } from '../../services/PlayerControl';
+import { Quality } from '../Quality';
+import { Loading } from '../Loading';
 
 interface Props extends VPlayerProps {
     setPlaying: Function
     setCurrentTime: Function
     setDurationTime: Function
+    setSource: Function
+    setWaiting: Function
     playUrl: string
     showCaption: boolean
+    mediaSource: any
 }
 
 interface State {
@@ -42,6 +46,7 @@ class PlayerVideo extends React.Component<Props, State>{
         playerControl.on('playing', () => this.props.setPlaying(true));
         playerControl.on('pause', () => this.props.setPlaying(false));
         playerControl.on('timeupdate', () => this.props.setCurrentTime(playerControl.getCurrentTime()));
+        playerControl.on('waiting', () => this.props.setWaiting());     
         playerControl.on('metadata', () => {
             this.props.setCurrentTime(0);
             this.props.setDurationTime(playerControl.getDuration())
@@ -53,6 +58,21 @@ class PlayerVideo extends React.Component<Props, State>{
             console.log('errror!!!!!');
         });
 
+        let counterActive = 0;
+        for(let i=0; i<this.props.mediaSource.length; i++) {
+            if(typeof this.props.mediaSource[i].active === 'boolean') {
+                counterActive++;
+            }
+        }
+        if(counterActive===0) {
+            for(let i=0; i<this.props.mediaSource.length; i++) {
+                if(this.props.mediaSource[i].quality === this.props.qualityDefault) {
+                    this.props.mediaSource[i].active = true;
+                }
+            }
+        }
+
+        this.props.setSource(this.props.mediaSource);
     }
 
     render() {
@@ -65,7 +85,7 @@ class PlayerVideo extends React.Component<Props, State>{
 
         return (
             <VPlayerContext.Provider value={provider}>
-                <div className='player' style={{ width, height }}>
+                <div className='vplayer' style={{ width, height }}>
                     <video
                         ref={this._refVideo}
                         src={this.props.playUrl}
@@ -74,6 +94,7 @@ class PlayerVideo extends React.Component<Props, State>{
                     />
 
                     <div className='adContainer' />
+                    <Loading />
                     <PlayPause full />
 
                     <div className='controls'>
@@ -86,12 +107,14 @@ class PlayerVideo extends React.Component<Props, State>{
                             </div>
                             <div className="secondary-control">
                                 {this.props.loadSrt && <ButtonSubtitle existSrt={true} />}
+                                <Quality />
                                 <Fullscreen />
                             </div>
                         </div>
                     </div>
 
                     {(this.props.loadSrt && this.props.showCaption) && <ShowSubtitle srt={this.props.loadSrt} />}
+                    
                 </div>
             </VPlayerContext.Provider>
         )
@@ -106,12 +129,18 @@ const mapDispatchToProps = (dispatch) => ({
     setPlaying: (t) => {
         dispatch(togglePlaying(t));
     },
+    setSource: (data) => {
+        dispatch(videoSource(data));
+    },
     setCurrentTime: (current) => {
         dispatch(currentTime(current));
     },
     setDurationTime: (duration) => {
         dispatch(durationTime(duration));
     },
+    setWaiting: () => {
+        dispatch(videoWaiting())
+    }
 });
 
 const PlayerVideoHoc = connect(mapStateToProps, mapDispatchToProps)(PlayerVideo);

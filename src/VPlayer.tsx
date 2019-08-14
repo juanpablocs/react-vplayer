@@ -15,18 +15,20 @@ export default class VPlayer extends React.Component<VPlayerProps> {
                 type: PropTypes.string,
                 quality: PropTypes.number
             }))
-        ]).isRequired
+        ]).isRequired,
+        qualityDefault: PropTypes.number
     };
 
     static defaultProps = {
         width: '720px',
-        height: '405px'
+        height: '405px',
+        qualityDefault: 360
     };
 
-    private createMediaSource():string {
-        if(Array.isArray(this.props.source)) {
+    private createMediaSource(): string {
+        if (Array.isArray(this.props.source)) {
             for (let i = 0; i < this.props.source.length; i++) {
-                if(this.props.source[i].quality===360){
+                if (this.props.source[i].quality === this.props.qualityDefault) {
                     return this.props.source[i].url;
                 }
             }
@@ -39,8 +41,9 @@ export default class VPlayer extends React.Component<VPlayerProps> {
 
         return (
             <Provider store={store}>
-                <PlayerVideo 
-                    playUrl={this.createMediaSource()} 
+                <PlayerVideo
+                    playUrl={this.createMediaSource()}
+                    mediaSource={this.props.source}
                     {...this.props}
                 />
             </Provider>

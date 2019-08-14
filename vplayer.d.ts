@@ -15,6 +15,7 @@ export interface VPlayerProps {
     height?: string
     loadAds?: string
     loadSrt?: string
+    qualityDefault?: number
 }
 
 export default class VPlayer extends React.Component<VPlayerProps> {

@@ -1,4 +1,4 @@
-.player {
+.vplayer {
     width: 700px;
     height: 395.5px;
     margin: 0;
@@ -49,11 +49,12 @@
       height: 100%;
       z-index: 2;
       position: absolute;
-      background: black;
       display: none;
     }
-
-    &[ads] {
+    .noads {
+      display: flex;
+    }
+    &[ads='linear'] {
       .control-slider {
         .slider {
           pointer-events: none;
@@ -62,6 +63,19 @@
           background: #fc0!important;
         }
       }
+      .adContainer{
+        display: block;
+        background: black;
+      }
+      .controls {
+        transform: translateY(0px);
+        opacity: 1;
+      }
+      .noads{
+        display: none!important;
+      }
+    }
+    &[ads='nolinear'] {
       .adContainer{
         display: block;
       }

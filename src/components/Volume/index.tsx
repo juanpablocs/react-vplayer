@@ -2,59 +2,79 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 //@ts-ignore
-import {ReactComponent as IconVolumeUp} from './../../assets/volume-up.svg';
+import { ReactComponent as IconVolumeUp } from './../../assets/volume-up.svg';
 //@ts-ignore
-import {ReactComponent as IconVolumeDown} from './../../assets/volume-down.svg';
+import { ReactComponent as IconVolumeDown } from './../../assets/volume-down.svg';
 
 import './index.scss';
-import { toogleVolume } from '../../actions/vplayer';
+import { setVolume } from '../../actions/vplayer';
 import { VPlayerContext, PlayerType } from '../../VPlayerContext';
 import Slider from './../Slider';
 
 interface Props {
-    volumeOn: boolean
-    toogleVolume: Function,
-    isCastActive: boolean,
-    isAdsActive: boolean
+    volume: number
+    setVolume: Function
 };
 
 class Volume extends React.Component<Props> {
 
     static contextType = VPlayerContext;
-    
-    componentDidUpdate(prevProps) {
-        if(prevProps.volumeOn !== this.props.volumeOn) {
-            const vol = this.props.volumeOn ? 1 : 0;
-            const { videoManager } = this.context as PlayerType;
-            if(this.props.isAdsActive) {
-                // videoAds.setVolume(vol);
-            }else {
-                videoManager.setVolume(vol);
-            }
+
+    volumeActive: boolean = true;
+    volumeLocal: number = 0;
+
+    private sanitizeVol(vol, max) {
+        vol = vol > max ? max : vol;
+        vol = vol < 0 ? 0 : vol;
+        return vol;
+    }
+
+    private setVolumePlayer(progress):void {
+        const { videoManager } = this.context as PlayerType;
+        videoManager.setVolume(this.sanitizeVol(progress / 100, 1));
+    }
+
+    componentDidMount() {
+        this.volumeLocal = this.props.volume;
+    }
+
+    onProgress = (progress) => {
+        this.setVolumePlayer(progress);
+    }
+
+    clickProgress = (progress) => {
+
+        this.setVolumePlayer(progress);
+        this.props.setVolume(this.sanitizeVol(progress, 100));
+        
+        if (progress < 1) {
+            this.volumeActive = false;
+        } else {
+            this.volumeActive = true;
+            this.volumeLocal = progress;
         }
     }
 
-    onProgress(p) {
-        console.log('progress', p);
-    }
-
-    clickProgress(p) {
-        console.log('click', p);
+    volumeActiveClick = () => {
+        this.volumeActive = !this.volumeActive;
+        const vol = this.volumeActive === false ? 0 : this.volumeLocal;
+        this.props.setVolume(vol);
+        this.setVolumePlayer(vol);
     }
 
     render() {
         return (
             <div className='volume-control'>
-                <button className='button--radius' onClick={()=>this.props.toogleVolume()}>
-                    {this.props.volumeOn ? (
+                <button className='button--radius' onClick={this.volumeActiveClick}>
+                    {this.props.volume > 0 ? (
                         <IconVolumeUp />
                     ) : (
-                        <IconVolumeDown />
-                    )}
+                            <IconVolumeDown />
+                        )}
                 </button>
                 <div className='volume-area'>
                     <Slider
-                        value={this.props.volumeOn ? 30 : 0}
+                        value={this.props.volume}
                         onProgress={this.onProgress}
                         onUp={this.clickProgress}
                     />
@@ -65,14 +85,12 @@ class Volume extends React.Component<Props> {
 }
 
 const mapStateToProps = (state) => ({
-    volumeOn: state.player.toogleVolume,
-    isCastActive: state.player.castActive,
-    isAdsActive: state.player.videoAds
+    volume: state.player.volume
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    toogleVolume: () => {
-        dispatch(toogleVolume());
+    setVolume: (vol) => {
+        dispatch(setVolume(vol));
     }
 });
 

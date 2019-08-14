@@ -25,7 +25,7 @@ class ButtonSubtitle extends React.Component<Props> {
         return (
             <div 
                 title='Subtitulos'
-                className={`button-caption ${this.props.showCaption && 'enabled'}`} 
+                className={`button-caption ${this.props.showCaption && 'enabled'} noads`} 
             >
                 <button className='button--radius' onClick={()=>this.props.toggleCaption()}>
                     <IconSubtitle />

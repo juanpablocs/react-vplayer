@@ -62,8 +62,10 @@ class ProgressBar extends React.Component<Props, State> {
 
         if(JSON.stringify(prevProps.videoSource) !== JSON.stringify(this.props.videoSource)){
             const { videoManager } = this.context as PlayerType;
+            
             this.props.videoSource.forEach(v => {
-                if(v.active) {
+                if(videoManager.changeSource && v.active) {
+                    console.log('active q', videoManager);
                     videoManager.changeSource(v.url, this.props.currentTime);
                     return;
                 }

@@ -13,6 +13,7 @@ export class VideoManager implements ManagerInterface {
             this.video.addEventListener('timeupdate', () => this.executeEvent('timeupdate'));
             this.video.addEventListener('loadedmetadata', () => this.executeEvent('metadata'));
             this.video.addEventListener('loadstart', () => this.executeEvent('ready'));
+            this.video.addEventListener('waiting', ()=>this.executeEvent('waiting'));
         }
     }
 
@@ -56,8 +57,9 @@ export class VideoManager implements ManagerInterface {
     }
 
     setVolume(vol) {
+        //sanitize number / 100 result 0 - 1 (0.2, 0.5, 1);
         if(this.video) {
-            this.video.volume = vol;
+            this.video.volume = Number(vol.toFixed(1));
         }
     }
 

@@ -5,10 +5,12 @@ const initialState = {
     playing: false,
     castActive: false,
     castPlaying: false,
-    toogleVolume: true,
+    volume: 90,
     toogleFullscreen: false,
     videoCoverShow: true, 
     videoAds: false,
+    videoSource: [],
+    videoWaiting: false,
     videoBackground: {
         stop: false,
         currentTime: 0,
@@ -33,10 +35,10 @@ export default (state = initialState, action) => {
         return { ...state, castPlaying:  typeof action.payload === 'boolean' ? action.payload : !state.castPlaying}
     }
     if(action.type === 'PLAYING') {
-        return { ...state, playing: action.payload}
+        return { ...state, playing: action.payload, videoWaiting:false}
     }
-    if(action.type === 'TOOGLE_VOLUME') {
-        return { ...state, toogleVolume: !state.toogleVolume}
+    if(action.type === 'SET_VOLUME') {
+        return { ...state, volume: action.payload}
     }
     if(action.type === 'TOOGLE_FULLSCREEN') {
         return { ...state, toogleFullscreen: !state.toogleFullscreen}
@@ -52,6 +54,9 @@ export default (state = initialState, action) => {
     }
     if(action.type === 'VIDEO_SOURCE') {
         return { ...state, videoSource: action.payload}
+    }
+    if(action.type === 'VIDEO_WAITING') {
+        return { ...state, videoWaiting: true}
     }
     return state;
 };
