@@ -37,13 +37,19 @@ export default class VPlayer extends React.Component<VPlayerProps> {
         return this.props.source;
     }
 
-    render() {
+    private createArraySource(): any[] {
+        if(Array.isArray(this.props.source)) {
+            return this.props.source;
+        }
+        return [];
+    }
 
+    render() {
         return (
             <Provider store={store}>
                 <PlayerVideo
                     playUrl={this.createMediaSource()}
-                    mediaSource={this.props.source}
+                    mediaSource={this.createArraySource()}
                     {...this.props}
                 />
             </Provider>

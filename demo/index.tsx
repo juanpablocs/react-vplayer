@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import VPlayer from './../src/VPlayer';
 
 const props = {
+    // source: 'https://raw.githubusercontent.com/juanpablocs/react-vplayer/master/demo/video/720p.mp4',
     source: [
         {
             url: 'https://raw.githubusercontent.com/juanpablocs/react-vplayer/master/demo/video/1080p.mp4', 

@@ -107,7 +107,7 @@ class PlayerVideo extends React.Component<Props, State>{
                             </div>
                             <div className="secondary-control">
                                 {this.props.loadSrt && <ButtonSubtitle existSrt={true} />}
-                                <Quality />
+                                {this.props.mediaSource.length > 0 && <Quality />}
                                 <Fullscreen />
                             </div>
                         </div>
