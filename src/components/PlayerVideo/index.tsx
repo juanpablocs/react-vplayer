@@ -85,12 +85,10 @@ class PlayerVideo extends React.Component<Props, State>{
 
         return (
             <VPlayerContext.Provider value={provider}>
-                <div className='vplayer' style={{ width, height }}>
+                <div className='vplayer' style={{ maxWidth:width, maxHeight:height }}>
                     <video
                         ref={this._refVideo}
                         src={this.props.playUrl}
-                        width={this.props.width}
-                        height={this.props.height}
                     />
 
                     <div className='adContainer' />
@@ -113,7 +111,11 @@ class PlayerVideo extends React.Component<Props, State>{
                         </div>
                     </div>
 
-                    {(this.props.loadSrt && this.props.showCaption) && <ShowSubtitle srt={this.props.loadSrt} />}
+                    <ShowSubtitle 
+                        refVideo={this._refVideo}
+                        show={this.props.loadSrt && this.props.showCaption} 
+                        srt={this.props.loadSrt} 
+                    />
                     
                 </div>
             </VPlayerContext.Provider>

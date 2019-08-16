@@ -1,6 +1,5 @@
 .subtitle-float {
     position: absolute;
-    bottom: 50px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -8,7 +7,9 @@
 .subtitle-text {
     font-size: 15px;
     color:white;
-    padding:1px 5px;
+    padding:2px 5px;
+    max-width: 250px;
+    text-align: center;
     background: rgba(0,0,0,0.5);
 }
 .button-caption {
@@ -29,5 +30,16 @@
     }
     &.enabled{
         opacity: 1;
+    }
+}
+
+@media (min-width: 600px) {
+    .subtitle-text {
+        font-size: 18px;
+    }
+}
+@media (max-width: 400px) {
+    .subtitle-text {
+        font-size: 12px;
     }
 }
