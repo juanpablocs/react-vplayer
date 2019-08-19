@@ -11,6 +11,10 @@ interface Props {
     onUp?: Function
 }
 
+interface CurrentElement {
+    current: HTMLDivElement
+}
+
 export default class Progress extends React.Component<Props> {
 
     refPointer: any = React.createRef();
@@ -28,32 +32,38 @@ export default class Progress extends React.Component<Props> {
         return (100 / width) * (pageX - left);
     }
 
-    setTimerElement(pageX=0, showTimer=false) {
-        const { current: sliderElement } = this.refSlider;
-        const { current: timerElement } = this.refTimer;
+    setTimerElement(pageX = 0, showTimer = false) {
+        const { current: sliderElement }: CurrentElement = this.refSlider;
+        const { current: timerElement }: CurrentElement = this.refTimer;
         const { left } = sliderElement.getBoundingClientRect();
         const percentage = this.getPercentage(sliderElement, pageX);
         const timer = this.props.timerDuration * (percentage / 100);;
+        const _left = pageX < sliderElement.offsetWidth / 2;
+        const _right = pageX > sliderElement.offsetWidth / 2;
+
         timerElement.innerHTML = secondsToTime(timer);
-        timerElement.style.left = `${(pageX - left - 10)}px`;
-        if(showTimer) {
+
+        if ((pageX > timerElement.offsetWidth * .7 && _left) || ((sliderElement.offsetWidth - pageX) > timerElement.offsetWidth * .3 && _right)) {
+            timerElement.style.left = `${(pageX - left - 10)}px`;
+        }
+        if (showTimer) {
             timerElement.classList.add('hover-timer--active');
         }
     }
 
     onMoveSlider = e => {
         if (this.isDragging) return;
-        
-        if(this.props.timerDuration) {
+
+        if (this.props.timerDuration) {
             this.setTimerElement(e.pageX, true);
         }
-       
+
     }
 
     onLeaveSlider = () => {
         if (this.isDragging) return;
 
-        if(this.props.timerDuration) {
+        if (this.props.timerDuration) {
             const { current } = this.refTimer;
             const timerElement = current as HTMLDivElement;
             timerElement.classList.remove('hover-timer--active');
@@ -130,7 +140,7 @@ export default class Progress extends React.Component<Props> {
     render() {
         return (
             <React.Fragment>
-                {(this.props.timerDuration>0) && <div className='hover-timer' ref={this.refTimer}>00:00</div>}
+                {(this.props.timerDuration > 0) && <div className='hover-timer' ref={this.refTimer}>00:00</div>}
                 <div
                     className="slider"
                     onMouseDown={this.onPressedSlider}
