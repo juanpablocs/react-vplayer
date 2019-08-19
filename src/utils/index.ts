@@ -17,3 +17,7 @@ export const secondsToTime = (s) => {
     const timeHour = s > 86400 ? pad(getHours(s)) + ':' : '';
     return timeHour + pad(getMinutes(s)) + ':' + pad(getSeconds(s));
 }
+
+export const closestNode = (e, t) => { 
+    return !e? false : e === t ? true : closestNode(e.parentNode, t);
+}

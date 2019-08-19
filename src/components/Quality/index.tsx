@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { videoSource } from '../../actions/vplayer';
 import './index.scss';
+import { closestNode } from '../../utils';
 
 interface Props {
     qualities: any[]
@@ -14,13 +15,27 @@ class Quality extends React.Component<Props, any> {
     state = {
         o:false
     }
+    
+    refQuality:any = React.createRef();
+    isOutClicked:boolean = true;
 
     componentDidMount() {
-
+        document.addEventListener('click', (e) => {
+            const divOptions = this.refQuality.current as HTMLDivElement;
+            const target = e.target as HTMLDivElement;
+            if (this.isOutClicked && !closestNode(target, divOptions) && this.state.o) {
+                this.setState({o:false});
+            }
+            this.isOutClicked = true;
+         });
     }
 
-    toogleClick = () => {
-        this.setState({o: !this.state.o});
+    toogleClick = (e) => {
+        e.stopPropagation();
+        this.isOutClicked = false;
+        setTimeout(()=>{
+            this.setState({o: !this.state.o});
+        }, 100)
     }
 
     createAlias(label) {
@@ -39,13 +54,13 @@ class Quality extends React.Component<Props, any> {
     changeQuality = (q) => {
         const qualities = this.props.qualities.map((quality)=>({...quality, active: quality.quality===q}));
         this.props.setSource(qualities);
-        setTimeout(()=>this.toogleClick(), 100);
+        setTimeout(()=>this.setState({o:false}), 1000);
     }
 
     render() {
         return (
             <div className={`quality-control ${this.state.o && 'quality-control--open'} noads`}>
-                <div className='quality-options'>
+                <div ref={this.refQuality} className='quality-options'>
                     <div>
                         {this.props.qualities.sort((min,max)=>(max.quality - min.quality)).map((quality, k)=>(
                             <div key={k} className={`item-option ${quality.active && 'active'}`} onClick={()=>this.changeQuality(quality.quality)}>
@@ -55,7 +70,7 @@ class Quality extends React.Component<Props, any> {
                         ))}
                     </div>
                 </div>
-                <button className='button--radius button-quality' onClick={this.toogleClick}>
+                <button id='vplayer-btn-quality' className='button--radius button-quality' onClick={this.toogleClick}>
                     <div className='quality-open'>{this.createCurrentAlias()}</div>
                 </button>
             </div>
