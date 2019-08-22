@@ -28,6 +28,16 @@ export const toggleCastPlaying = (payload=null) => ({
     payload
 });
 
+export const castName = (payload=null) => ({
+    type: 'CAST_NAME',
+    payload
+});
+
+export const castConnect = (payload=null) => ({
+    type: 'CAST_CONNECT',
+    payload
+});
+
 export const setVolume = (payload=0) => ({
     type: 'SET_VOLUME',
     payload

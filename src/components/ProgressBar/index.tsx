@@ -106,12 +106,7 @@ class ProgressBar extends React.Component<Props, State> {
         this.props.setCurrentTime(timer);
 
         const { videoManager } = this.context as PlayerType;
-
-        if (this.props.castActive) {
-            // videoCast.Controller.playOrPause();
-        } else {
-            videoManager.setSeek(timer);
-        }
+        videoManager.setSeek(timer);
     }
 
 

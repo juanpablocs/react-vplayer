@@ -1,5 +1,6 @@
 import { VideoManager } from "./VideoManager";
 import { AdsManager } from "./AdsManager";
+import { CastManager } from "./CastManager";
 
 export class PlayerControl {
 
@@ -7,6 +8,7 @@ export class PlayerControl {
 
     videoManager: VideoManager;
     adsManager: AdsManager;
+    castManager: CastManager;
 
     constructor(video:HTMLVideoElement, loadAds:string) {
         this.videoManager = new VideoManager(video);
@@ -16,6 +18,7 @@ export class PlayerControl {
             
             this.adsManager.loadScriptSDK();
         }
+        this.castManager = new CastManager(video);
     }
 
     on(type, callback) {
@@ -34,11 +37,14 @@ export class PlayerControl {
             })
         }
         this.videoManager.on(type, callback);
+        this.castManager.on(type, callback);
     }
 
     play() {
         if(this.adsManager && this.adsManager.active) {
             this.adsManager.play();
+        }else if(this.castManager && this.castManager.active) {
+            this.castManager.play();
         }else {
             this.videoManager.play();
         }
@@ -47,18 +53,26 @@ export class PlayerControl {
     pause(): void {
         if(this.adsManager && this.adsManager.active) {
             this.adsManager.pause();
+        }else if(this.castManager && this.castManager.active) {
+            this.castManager.pause();
         }else {
             this.videoManager.pause();
         }
     }
 
     setSeek(currentTime) {
-        this.videoManager.setSeek(currentTime);
+        if(this.castManager && this.castManager.active) {
+            this.castManager.setSeek(currentTime);
+        }else{
+            this.videoManager.setSeek(currentTime);
+        }
     }
 
     setVolume(vol) {
         if(this.adsManager && this.adsManager.active) {
             this.adsManager.setVolume(vol);
+        }else if(this.castManager && this.castManager.active) {
+            this.castManager.setVolume(vol);
         }else{
             this.videoManager.setVolume(vol);
         }
@@ -67,6 +81,8 @@ export class PlayerControl {
     getDuration() {
         if(this.adsManager && this.adsManager.active) {
             return this.adsManager.getDuration();
+        }else if(this.castManager && this.castManager.active) {
+            return this.castManager.getDuration();
         }else{
             return this.videoManager.getDuration();
         }
@@ -75,6 +91,8 @@ export class PlayerControl {
     getCurrentTime() {
         if(this.adsManager && this.adsManager.active) {
             return this.adsManager.getCurrentTime();
+        }else if(this.castManager && this.castManager.active) {
+            return this.castManager.getCurrentTime();
         }else{
             return this.videoManager.getCurrentTime();
         }
@@ -96,5 +114,11 @@ export class PlayerControl {
 
     changeSource(url, currentTime): void {
         this.videoManager.changeSource(url, currentTime);
+    }
+
+    popupCast(cb) {
+        if(this.castManager instanceof CastManager) {
+            this.castManager.openCastPopUpConnect(cb);
+        }
     }
 }

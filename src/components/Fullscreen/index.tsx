@@ -38,7 +38,7 @@ class Fullscreen extends React.Component<Props> {
 
     render() {
         return (
-            <div className='fullscreen-control'>
+            <div className='fullscreen-control nocast'>
                 <button className='button--radius' onClick={this.props.isFullscreen ? this.onClickExitscreen : this.onClickFullscreen}>
                     {this.props.isFullscreen ? (
                         <IconDownscreen />

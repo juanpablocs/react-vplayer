@@ -59,7 +59,7 @@ class Quality extends React.Component<Props, any> {
 
     render() {
         return (
-            <div className={`quality-control ${this.state.o && 'quality-control--open'} noads`}>
+            <div className={`quality-control ${this.state.o && 'quality-control--open'} noads nocast`}>
                 <div ref={this.refQuality} className='quality-options'>
                     <div>
                         {this.props.qualities.sort((min,max)=>(max.quality - min.quality)).map((quality, k)=>(

@@ -84,6 +84,15 @@
         opacity: 1;
       }
     }
+    &[cast] {
+      .controls {
+        transform: translateY(0px);
+        opacity: 1;
+      }
+      .nocast{
+        display: none!important;
+      }
+    }
     &[hidecontrol] {
       .controls{
         transform: translateY(50px)!important;

@@ -5,6 +5,8 @@ const initialState = {
     playing: false,
     castActive: false,
     castPlaying: false,
+    castConnect: false,
+    castName: '',
     volume: 90,
     toogleFullscreen: false,
     videoCoverShow: true, 
@@ -32,7 +34,13 @@ export default (state = initialState, action) => {
         return { ...state, castActive: typeof action.payload === 'boolean' ? action.payload : !state.castActive}
     }
     if(action.type === 'CAST_PLAYING') {
-        return { ...state, castPlaying:  typeof action.payload === 'boolean' ? action.payload : !state.castPlaying}
+        return { ...state, playing:action.payload, castPlaying:  typeof action.payload === 'boolean' ? action.payload : !state.castPlaying}
+    }
+    if(action.type === 'CAST_NAME') {
+        return { ...state, castName: action.payload}
+    }
+    if(action.type === 'CAST_CONNECT') {
+        return { ...state, castConnect: action.payload}
     }
     if(action.type === 'PLAYING') {
         return { ...state, playing: action.payload, videoWaiting:false}

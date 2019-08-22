@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import './index.scss';
 
 import { PlayerType, VPlayerContext } from '../../VPlayerContext';
-import { togglePlaying, currentTime, durationTime, videoSource, videoWaiting } from '../../actions/vplayer';
+import { togglePlaying, currentTime, durationTime, videoSource, videoWaiting, toggleCast, toggleCastPlaying, castName, castConnect } from '../../actions/vplayer';
 import { PlayPause } from '../PlayPause';
 import { ProgressBar } from '../ProgressBar';
 import { Timer } from '../Timer';
@@ -16,6 +16,8 @@ import { ShowSubtitle } from '../Subtitle/ShowSubtitle';
 import { PlayerControl } from '../../services/PlayerControl';
 import { Quality } from '../Quality';
 import { Loading } from '../Loading';
+import { Chromecast } from '../Chromecast';
+import { ShowCastDevice } from '../Chromecast/ShowCastDevice';
 
 interface Props extends VPlayerProps {
     setPlaying: Function
@@ -23,6 +25,11 @@ interface Props extends VPlayerProps {
     setDurationTime: Function
     setSource: Function
     setWaiting: Function
+    setCast: Function
+    setCastPlaying: Function
+    setCastConnect: Function
+    setCastName: Function
+    castActive: boolean
     playUrl: string
     showCaption: boolean
     mediaSource: any
@@ -57,6 +64,25 @@ class PlayerVideo extends React.Component<Props, State>{
         playerControl.on('error', () => {
             console.log('errror!!!!!');
         });
+
+        playerControl.on('castPlaying', () => {
+            this.props.setCastPlaying(true);
+        });
+
+        playerControl.on('castConnect', ({connect, name}) => {
+            console.log('castConnect', connect);
+            this.props.setCast(connect);
+            this.props.setCastConnect(connect);
+            this.props.setCastName(name);
+            if(connect) {
+                playerControl.videoManager.pause();
+            }else{
+                this.props.setCastPlaying(false);
+            }
+            
+        });
+
+        
 
         let counterActive = 0;
         for(let i=0; i<this.props.mediaSource.length; i++) {
@@ -104,6 +130,7 @@ class PlayerVideo extends React.Component<Props, State>{
                                 <Timer />
                             </div>
                             <div className="secondary-control">
+                                <Chromecast />
                                 {this.props.loadSrt && <ButtonSubtitle existSrt={true} />}
                                 {this.props.mediaSource.length > 0 && <Quality />}
                                 <Fullscreen />
@@ -116,6 +143,8 @@ class PlayerVideo extends React.Component<Props, State>{
                         show={this.props.loadSrt && this.props.showCaption} 
                         srt={this.props.loadSrt} 
                     />
+
+                    <ShowCastDevice />
                     
                 </div>
             </VPlayerContext.Provider>
@@ -124,7 +153,8 @@ class PlayerVideo extends React.Component<Props, State>{
 }
 
 const mapStateToProps = (state) => ({
-    showCaption: state.player.showCaption
+    showCaption: state.player.showCaption,
+    castActive: state.player.castActive
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -142,6 +172,18 @@ const mapDispatchToProps = (dispatch) => ({
     },
     setWaiting: () => {
         dispatch(videoWaiting())
+    },
+    setCast: (d) => {
+        dispatch(toggleCast(d));
+    },
+    setCastPlaying: (d) => {
+        dispatch(toggleCastPlaying(d));
+    },
+    setCastConnect: (d) => {
+        dispatch(castConnect(d));
+    },
+    setCastName: (d) => {
+        dispatch(castName(d));
     }
 });
 

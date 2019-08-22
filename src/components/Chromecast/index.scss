@@ -1,0 +1,42 @@
+.cast-control{
+    margin: 0 2px;
+}
+.button-cast{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    left: 2px;
+    &.active{
+        svg{
+            opacity: 1;
+        }
+    }
+    svg{
+        position: relative;
+        top: 0px;
+        fill: white;
+        width: 19px;
+        opacity: .5;
+        height: auto;
+    }
+}
+
+
+.cast-device{
+    position: absolute;
+    padding: 5px 6px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    bottom: 60px;
+    left: 15px;
+    border-radius: 4px;
+    font-size:13px;
+    display: flex;
+    align-items: center;
+    svg{
+        fill:white;
+        width: 18px;
+        margin-right: 8px;
+    }
+}
