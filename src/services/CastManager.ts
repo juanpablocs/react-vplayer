@@ -30,7 +30,9 @@ export class CastManager implements ManagerInterface {
         (async ()=>{
             try{
                 await getScript(this.scriptSDK);
-                this.initializeCast();
+                setTimeout(()=>{
+                    this.initializeCast();
+                }, 100);
             }catch(e) {
                 console.log('err', e);
                 this.executeEvent('error')
